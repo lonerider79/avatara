@@ -1,4 +1,4 @@
-#avatara (Avatar Authomatic)
+#avatara (Avatar Automatic)
 =======
 
 Automatic avatar generation using Wavatar or MonsterID for Elgg user profiles who do not have a profile photo or Gravatar.
