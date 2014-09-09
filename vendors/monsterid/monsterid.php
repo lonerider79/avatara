@@ -125,6 +125,7 @@ $parts = array(
     $file->close();
     imagedestroy($out);
     imagedestroy($monster);
+    avatara_build($filename,$seed);
     return true;
 }
 function monsterid_build_group($seed='',$file=''){
@@ -176,6 +177,7 @@ $parts = array(
     $file->close();
     imagedestroy($out);
     imagedestroy($monster);
+    avatara_build($filename,$seed);
     return true;
 }
 }

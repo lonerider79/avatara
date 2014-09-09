@@ -31,7 +31,7 @@ function avatara_seed($entity) {
 /* Builds the all sizes avatar icons for the newly created avatar
  * 
  */
-function avatara_build($filename){
+function avatara_build($filename,$seed){
     
     $icon_sizes = elgg_get_config('icon_sizes');
 

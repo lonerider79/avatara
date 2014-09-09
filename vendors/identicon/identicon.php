@@ -468,7 +468,7 @@ protected function identicon_build($seed, $file) {
     imagejpeg($resized, $filename);
     $file->close();
     imagedestroy($resized);
-    avatara_build($filename);
+    avatara_build($filename,$seed);
     return true;
 }
 
@@ -568,7 +568,7 @@ protected function identicon_build_group($seedbase, $file) {
     imagejpeg($grid, $filename);
     $file->close();
     imagedestroy($grid);
-    avatara_build($filename);
+    avatara_build($filename,$seedbase);
 
     return true;
 }

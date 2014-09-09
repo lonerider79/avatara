@@ -11,34 +11,27 @@
    * @link http://mitre.org/
    */
 
-function wavatar_init() {
-			
-	// Get config
-	global $CONFIG;
 
-	extend_view('profile/editicon', 'wavatar/editicon');
-			
-	register_action('wavatar/preference', false, $CONFIG->pluginspath . 'wavatar/actions/preference.php');
+class Wavatar {
+    
+function __construct() {
 
-	register_plugin_hook('entity:icon:url', 'user', 'wavatar_usericon_hook', 900); 
-	register_plugin_hook('entity:icon:url', 'group', 'wavatar_groupicon_hook', 900); 
+ }
 
-}
-
-define('WAVATAR_SIZE',           '80');
-define('WAVATAR_BACKGROUNDS',   '4');
-define('WAVATAR_FACES',         '11');
-define('WAVATAR_BROWS',         '8');
-define('WAVATAR_EYES',          '13');
-define('WAVATAR_PUPILS',        '11');
-define('WAVATAR_MOUTHS',        '19');
+const WAVATAR_SIZE = '80';
+const WAVATAR_BACKGROUNDS = '4';
+const WAVATAR_FACES = '11';
+const WAVATAR_BROWS = '8';
+const WAVATAR_EYES = '13';
+const WAVATAR_PUPILS = '11';
+const WAVATAR_MOUTHS = '19';
 
 /*-----------------------------------------------------------------------------
  Handy function for converting hus/sat/lum color values to RGB, which makes it
  very easy to generate random-yet-still-vibrant colors.
  -----------------------------------------------------------------------------*/
 
-function wavatar_hsl ($h, $s, $l) 
+private function wavatar_hsl ($h, $s, $l) 
 {
 
 	if ($h>240 || $h<0) return array(0,0,0);
@@ -96,7 +89,7 @@ function wavatar_hsl ($h, $s, $l)
  our composite using the given color values.
  -----------------------------------------------------------------------------*/
 
-function wavatar_apply_image ($base, $part)
+private function wavatar_apply_image ($base, $part)
 {
   
 	$file = dirname(__FILE__).'/parts/' . $part . '.png';
@@ -105,7 +98,7 @@ function wavatar_apply_image ($base, $part)
 	if(!$im)
 		return;
 	imageSaveAlpha($im, true);
-	imagecopy($base,$im, 0, 0, 0, 0, WAVATAR_SIZE, WAVATAR_SIZE);
+	imagecopy($base,$im, 0, 0, 0, 0, self::WAVATAR_SIZE, self::WAVATAR_SIZE);
 	imagedestroy($im);
 
 }
@@ -114,21 +107,21 @@ function wavatar_apply_image ($base, $part)
  Builds the avatar.
  -----------------------------------------------------------------------------*/
 
-function wavatar_build ($seed, $file)
+protected function wavatar_build ($seed, $file)
 {
 
-	$face =         1 + (hexdec (substr ($seed,  1, 2)) % (WAVATAR_FACES));
+	$face =         1 + (hexdec (substr ($seed,  1, 2)) % (self::WAVATAR_FACES));
 	$bg_color =         (hexdec (substr ($seed,  3, 2)) % 240);
-	$fade =         1 + (hexdec (substr ($seed,  5, 2)) % (WAVATAR_BACKGROUNDS));
+	$fade =         1 + (hexdec (substr ($seed,  5, 2)) % (self::WAVATAR_BACKGROUNDS));
 	$wav_color =        (hexdec (substr ($seed,  7, 2)) % 240);
-	$brow =         1 + (hexdec (substr ($seed,  9, 2)) % (WAVATAR_BROWS));
-	$eyes =         1 + (hexdec (substr ($seed, 11, 2)) % (WAVATAR_EYES));
-	$pupil =        1 + (hexdec (substr ($seed, 13, 2)) % (WAVATAR_PUPILS));
-	$mouth =        1 + (hexdec (substr ($seed, 15, 2)) % (WAVATAR_MOUTHS));
+	$brow =         1 + (hexdec (substr ($seed,  9, 2)) % (self::WAVATAR_BROWS));
+	$eyes =         1 + (hexdec (substr ($seed, 11, 2)) % (self::WAVATAR_EYES));
+	$pupil =        1 + (hexdec (substr ($seed, 13, 2)) % (self::WAVATAR_PUPILS));
+	$mouth =        1 + (hexdec (substr ($seed, 15, 2)) % (self::WAVATAR_MOUTHS));
 	//echo "<div>face=$face fade=$fade brow=$brow eyes=$eyes $pupil mouth=$mouth<br></div>";
 	//echo "<div><p>$seed</p></div>";
 	// create backgound
-	$avatar = imagecreatetruecolor (WAVATAR_SIZE, WAVATAR_SIZE);
+	$avatar = imagecreatetruecolor (self::WAVATAR_SIZE, self::WAVATAR_SIZE);
 	//Pick a random color for the background
 	$c = wavatar_hsl ($bg_color, 240, 50);
 	$bg = imagecolorallocate ($avatar, $c[0], $c[1], $c[2]);
@@ -138,7 +131,7 @@ function wavatar_build ($seed, $file)
 	//Now add the various layers onto the image
 	wavatar_apply_image ($avatar, "fade$fade");
 	wavatar_apply_image ($avatar, "mask$face");
-	imagefill($avatar, WAVATAR_SIZE / 2,WAVATAR_SIZE / 2,$fg);
+	imagefill($avatar, self::WAVATAR_SIZE / 2,self::WAVATAR_SIZE / 2,$fg);
 	wavatar_apply_image ($avatar, "shine$face");
 	wavatar_apply_image ($avatar, "brow$brow");
 	wavatar_apply_image ($avatar, "eyes$eyes");
@@ -164,33 +157,7 @@ function wavatar_build ($seed, $file)
 	imagejpeg($avatar, $filename);
 	imagedestroy($avatar);
 
-	$topbar = get_resized_image_from_existing_file($filename, 16, 16, true);
-	$tiny = get_resized_image_from_existing_file($filename, 25, 25, true);
-	$small = get_resized_image_from_existing_file($filename, 40, 40, true);
-	$medium = get_resized_image_from_existing_file($filename, 100, 100, true);
-	$large = get_resized_image_from_existing_file($filename, 200, 200);
-    
-	$file->setFilename('wavatar/' . $seed . '/large.jpg');
-	$file->open('write');
-	$file->write($large);
-	$file->close();
-	$file->setFilename('wavatar/' . $seed . '/medium.jpg');
-	$file->open('write');
-	$file->write($medium);
-	$file->close();
-	$file->setFilename('wavatar/' . $seed . '/small.jpg');
-	$file->open('write');
-	$file->write($small);
-	$file->close();
-	$file->setFilename('wavatar/' . $seed . '/tiny.jpg');
-	$file->open('write');
-	$file->write($tiny);
-	$file->close();
-	$file->setFilename('wavatar/' . $seed . '/topbar.jpg');
-	$file->open('write');
-	$file->write($topbar);
-	$file->close();
-            
+        avatara_build($filename,$seed);            
 	return true;
 
 }
@@ -200,7 +167,7 @@ function wavatar_build_group ($seedbase, $file)
 
 	// build a four-up
 
-	$grid = imagecreatetruecolor(WAVATAR_SIZE * 2, WAVATAR_SIZE * 2);
+	$grid = imagecreatetruecolor(self::WAVATAR_SIZE * 2, self::WAVATAR_SIZE * 2);
 
 	/*
 	$bg_color =         (hexdec (substr ($seedbase,  3, 2)) % 240);
@@ -214,18 +181,18 @@ function wavatar_build_group ($seedbase, $file)
 		$md5 = md5(substr($seedbase, $i * 4, 4));
 		$seed = substr ($md5, 0, 17);
 
-		$face =         1 + (hexdec (substr ($seed,  1, 2)) % (WAVATAR_FACES));
+		$face =         1 + (hexdec (substr ($seed,  1, 2)) % (self::WAVATAR_FACES));
 		$bg_color =         (hexdec (substr ($seed,  3, 2)) % 240);
-		$fade =         1 + (hexdec (substr ($seed,  5, 2)) % (WAVATAR_BACKGROUNDS));
+		$fade =         1 + (hexdec (substr ($seed,  5, 2)) % (self::WAVATAR_BACKGROUNDS));
 		$wav_color =        (hexdec (substr ($seed,  7, 2)) % 240);
-		$brow =         1 + (hexdec (substr ($seed,  9, 2)) % (WAVATAR_BROWS));
-		$eyes =         1 + (hexdec (substr ($seed, 11, 2)) % (WAVATAR_EYES));
-		$pupil =        1 + (hexdec (substr ($seed, 13, 2)) % (WAVATAR_PUPILS));
-		$mouth =        1 + (hexdec (substr ($seed, 15, 2)) % (WAVATAR_MOUTHS));
+		$brow =         1 + (hexdec (substr ($seed,  9, 2)) % (self::WAVATAR_BROWS));
+		$eyes =         1 + (hexdec (substr ($seed, 11, 2)) % (self::WAVATAR_EYES));
+		$pupil =        1 + (hexdec (substr ($seed, 13, 2)) % (self::WAVATAR_PUPILS));
+		$mouth =        1 + (hexdec (substr ($seed, 15, 2)) % (self::WAVATAR_MOUTHS));
 		//echo "<div>face=$face fade=$fade brow=$brow eyes=$eyes $pupil mouth=$mouth<br></div>";
 		//echo "<div><p>$seed</p></div>";
 		// create backgound
-		$avatar = imagecreatetruecolor (WAVATAR_SIZE, WAVATAR_SIZE);
+		$avatar = imagecreatetruecolor (self::WAVATAR_SIZE, self::WAVATAR_SIZE);
 		//Pick a random color for the background
 		$c = wavatar_hsl ($bg_color, 240, 50);
 		$bg = imagecolorallocate ($avatar, $c[0], $c[1], $c[2]);
@@ -235,7 +202,7 @@ function wavatar_build_group ($seedbase, $file)
 		//Now add the various layers onto the image
 		wavatar_apply_image ($avatar, "fade$fade");
 		wavatar_apply_image ($avatar, "mask$face");
-		imagefill($avatar, WAVATAR_SIZE / 2,WAVATAR_SIZE / 2,$fg);
+		imagefill($avatar, self::WAVATAR_SIZE / 2,self::WAVATAR_SIZE / 2,$fg);
 		wavatar_apply_image ($avatar, "shine$face");
 		wavatar_apply_image ($avatar, "brow$brow");
 		wavatar_apply_image ($avatar, "eyes$eyes");
@@ -243,8 +210,8 @@ function wavatar_build_group ($seedbase, $file)
 		wavatar_apply_image ($avatar, "mouth$mouth");
 
 		// put this avatar into the grid in the right spot
-		imagecopy($grid, $avatar, ($i % 2) * WAVATAR_SIZE, intval($i / 2) * WAVATAR_SIZE,
-			  0, 0, WAVATAR_SIZE, WAVATAR_SIZE);
+		imagecopy($grid, $avatar, ($i % 2) * self::WAVATAR_SIZE, intval($i / 2) * self::WAVATAR_SIZE,
+			  0, 0, self::WAVATAR_SIZE, self::WAVATAR_SIZE);
 
 	}
 //     //resize if needed
@@ -267,55 +234,12 @@ function wavatar_build_group ($seedbase, $file)
 	imagejpeg($grid, $filename);
 	imagedestroy($grid);
 
-	$topbar = get_resized_image_from_existing_file($filename, 16, 16, true);
-	$tiny = get_resized_image_from_existing_file($filename, 25, 25, true);
-	$small = get_resized_image_from_existing_file($filename, 40, 40, true);
-	$medium = get_resized_image_from_existing_file($filename, 100, 100, true);
-	$large = get_resized_image_from_existing_file($filename, 200, 200);
-    
-	$file->setFilename('wavatar/' . $seedbase . '/large.jpg');
-	$file->open('write');
-	$file->write($large);
-	$file->close();
-	$file->setFilename('wavatar/' . $seedbase . '/medium.jpg');
-	$file->open('write');
-	$file->write($medium);
-	$file->close();
-	$file->setFilename('wavatar/' . $seedbase . '/small.jpg');
-	$file->open('write');
-	$file->write($small);
-	$file->close();
-	$file->setFilename('wavatar/' . $seedbase . '/tiny.jpg');
-	$file->open('write');
-	$file->write($tiny);
-	$file->close();
-	$file->setFilename('wavatar/' . $seedbase . '/topbar.jpg');
-	$file->open('write');
-	$file->write($topbar);
-	$file->close();
-            
+        avatara_build($filename,$seed);            
 	return true;
 
 }
 
-/**
- * builds a standard seed from the entity's email field
- */
-function wavatar_seed($entity) {
-	if ($entity instanceof ElggUser) {
-		$start = strtolower ($entity->email);
-	} else if ($entity instanceof ElggGroup) {
-		$start = strtolower ($entity->name);
-	}
 
-	if (!$start) {
-		$start = (string) $entity->getGUID();
-	}
-
-	$md5 = md5($start);
-	$seed = substr ($md5, 0, 17);
-	return $seed;
-}
 
 /*-----------------------------------------------------------------------------
  This makes sure that the image is present (builds it if it isn't) and then
@@ -334,8 +258,8 @@ function wavatar_check ($entity)
 		$file = new ElggFile();
 		$file->owner_guid = $entity->getGUID();
 
-		$seed = wavatar_seed($entity);
-		$file->setFilename('wavatar/' . $seed . '/master.jpg');
+		$seed = avatara_seed($entity);
+		$file->setFilename('avatara/' . $seed . '/master.jpg');
 		$file->setMimeType('image/jpeg');
 
 		if (!$file->exists()) {
@@ -368,57 +292,8 @@ function wavatar_check ($entity)
 	return false;
 }
 
-	function wavatar_usericon_hook($hook, $entity_type, $returnvalue, $params) {
-		global $CONFIG;
-		/** /
-		 print "\n\nWAV:\n";
-		 print $returnvalue;
-		 print $user->preferWavatar;
-		 / **/
-		if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggUser)) {
-			$entity = $params['entity'];
-			// if we don't have an icon or the user just prefers the wavatar
-			if ($entity->preferWavatar || !$returnvalue) {
-				return wavatar_url($entity, $params['size']);
-			}
-		} else {
-			return $returnvalue;
-		}
-    
-    
-	}
+}
 
-	function wavatar_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
-		global $CONFIG;
-		/*
-		 print "\n\nWAV:\n";
-		 print $returnvalue;
-		 print $user->preferWavatar;
-		*/
-		if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggGroup)) {
-			$entity = $params['entity'];
-			// if we don't have an icon or the user just prefers the wavatar
-			if ($entity->preferWavatar || !$returnvalue) {
-				return wavatar_url($entity, $params['size']);
-			}
-		} else {
-			return $returnvalue;
-		}
-    
-    
-	}
 
-	function wavatar_url($entity, $size) {
-		global $CONFIG;
-		// make sure the wavatar is built for this user
-		if (wavatar_check($entity)) {
-			return $CONFIG->wwwroot . 'mod/wavatar/img.php?entity=' . $entity->getGUID() . '&size=' . $size;
-		} else {
-			return false;
-		}
-	}
-
-// Make sure the profile initialisation function is called on initialisation
-	register_elgg_event_handler('init','system','wavatar_init');
-
+        
 	?>
