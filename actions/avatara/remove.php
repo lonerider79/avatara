@@ -18,7 +18,7 @@ if ($user->preferIdenticon) {
     $user->preferIdenticon = false;
     // Delete all identicons from diskspace
     $icon_sizes = elgg_get_config('icon_sizes');
-    $seed = identicon_seed($user);
+    $seed = avatara_seed($user);
     foreach ($icon_sizes as $name => $size_info) {
         $file = new ElggFile();
         $file->owner_guid = $user_guid;

@@ -26,7 +26,7 @@ $seed = identicon_seed($user);
 // Try and get the icon
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $user_guid;
-$filehandler->setFilename("identicon/" . $seed . '/' . $size . ".jpg");
+$filehandler->setFilename("avatara/" . $seed . '/' . $size . ".jpg");
 
 $success = false;
 
@@ -37,7 +37,7 @@ try {
         }
 }
 } catch (InvalidParameterException $e) {
-    elgg_log("Unable to get Identicon for user with GUID $user_guid", 'ERROR');
+    elgg_log("Unable to get Avatar for user with GUID $user_guid", 'ERROR');
 }
 
 if (!$success) {

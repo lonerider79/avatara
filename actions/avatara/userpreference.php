@@ -3,13 +3,13 @@
 $user_guid = (int)get_input('user_guid');
 $user = get_entity($user_guid);
 
-$pref = get_input('preferIdenticon', false);
+$pref = get_input('preferAvatara', false);
 if (is_array($pref)){
         $pref = $pref[0];
 }
 
 if ($pref) {
-  $user->preferIdenticon = true;
+  $user->preferAvatara = $pref;
   unset($user->icontime);
   system_message(elgg_echo('identicon:identicon_yes'));
 } else {
@@ -27,7 +27,7 @@ if ($pref) {
     }
   }
 
-  system_message(elgg_echo('identicon:identicon_no'));
+  system_message(elgg_echo('avatara:identicon_no'));
 }
 
 forward(REFERER);

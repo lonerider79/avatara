@@ -12,11 +12,14 @@
 elgg_register_event_handler('init','system','avatara_init');
 
 function avatara_init() {
-    $action_path = elgg_get_plugins_path() . 'avatara/actions';
+    $action_path = elgg_get_plugins_path() . 'avatara/actions/avatara/';
         // Register a page handler so we can have nice URLs
     elgg_register_page_handler('avatara', 'avatara_page_handler');
-    elgg_register_library('avatara', dirname(__FILE__) . '/lib/identicon.php');
-    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
+    elgg_register_action('avatara/userpreference', $action_path . 'userpreference.php', 'logged_in');
+    elgg_register_action('avatara/grouppreference', $action_path . 'grouppreference.php', 'logged_in');
+    
+//    elgg_register_library('avatara', dirname(__FILE__) . '/lib/identicon.php');
+//    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
 
     elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'avatara_usericon_hook', 900);
     elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'avatara_groupicon_hook', 900);

@@ -11,7 +11,7 @@
 $user = $vars['entity'];
 
 if ($user->preferIdenticon) {
-    echo "<p>" . elgg_echo("identicon:avatar_upload_disabled") . "</p>";
+    echo "<p>" . elgg_echo("avatara:avatar_upload_disabled") . "</p>";
 } else {
 
     $user_avatar = elgg_view('output/img', array(

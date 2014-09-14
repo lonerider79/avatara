@@ -27,7 +27,7 @@ $noyes_options = array(
     echo elgg_view("input/dropdown", array("name" => "params[avatara_usemonsterId]", "options_values" =>$noyes_options, "value" => $avatara_usemonsterId, "class" => "mls"));
     echo "<div class='elgg-subtext'>" . elgg_echo("avatara:admin:usemonsterid:description") . "</div>";
     echo "<br />";
-    echo '<label>' . elgg_echo('avatara:admin:usemonsterid') . ':' . '</label>';
+    echo '<label>' . elgg_echo('avatara:admin:usewavatar') . ':' . '</label>';
     echo "<br />";
     echo elgg_view("input/dropdown", array("name" => "params[avatara_usewavatar]", "options_values" =>$noyes_options, "value" => $avatara_usewavatar, "class" => "mls"));
     echo "<div class='elgg-subtext'>" . elgg_echo("avatara:admin:usewavatar:description") . "</div>";
