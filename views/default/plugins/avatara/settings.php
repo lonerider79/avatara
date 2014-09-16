@@ -13,6 +13,7 @@ $noyes_options = array(
     $avatara_useIdenticon = elgg_get_plugin_setting('avatara_useIdenticon', 'avatara');
     $avatara_usemonsterId = elgg_get_plugin_setting('avatara_usemonsterId', 'avatara');
     $avatara_usewavatar = elgg_get_plugin_setting('avatara_usewavatar', 'avatara');
+    $avatara_useforgroups = elgg_get_plugin_setting('avatara_useforgroups', 'avatara');
     
     echo "<h4>";
     echo elgg_echo('avatara:admin:title:avatara');
@@ -31,6 +32,11 @@ $noyes_options = array(
     echo "<br />";
     echo elgg_view("input/dropdown", array("name" => "params[avatara_usewavatar]", "options_values" =>$noyes_options, "value" => $avatara_usewavatar, "class" => "mls"));
     echo "<div class='elgg-subtext'>" . elgg_echo("avatara:admin:usewavatar:description") . "</div>";
+    echo "<br />";
+    echo '<label>' . elgg_echo('avatara:admin:useforgroups') . ':' . '</label>';
+    echo "<br />";
+    echo elgg_view("input/dropdown", array("name" => "params[avatara_useforgroups]", "options_values" =>$noyes_options, "value" => $avatara_useforgroups, "class" => "mls"));
+    echo "<div class='elgg-subtext'>" . elgg_echo("avatara:admin:useforgroups:description") . "</div>";
     echo "<br />";
 
 ?>

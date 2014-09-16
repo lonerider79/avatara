@@ -22,7 +22,8 @@ function avatara_init() {
 //    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
 
     elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'avatara_usericon_hook', 900);
-    elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'avatara_groupicon_hook', 900);
+    $avatara_useforgroups = elgg_get_plugin_setting('avatara_useforgroups', 'avatara');
+    if($avatara_useforgroups == "yes") elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'avatara_groupicon_hook', 900);
 
     
 }
@@ -74,7 +75,7 @@ function avatara_usericon_hook($hook, $entity_type, $returnvalue, $params) {
     if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggUser)) {
         $ent = $params['entity'];
         // if we don't have an icon or the user just prefers the avatar
-        if ($ent->preferIdenticon || !($ent->icontime)) {
+        if ($ent->preferAvatara || !($ent->icontime)) {
             return avatara_url($ent, $params['size']);
         }
     } else {
@@ -88,7 +89,7 @@ function avatara_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
     if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggGroup)) {
         $ent = $params['entity'];
         // if we don't have an icon or the user just prefers the avatar
-        if ($ent->preferGroupIdenticon || !($ent->icontime)) {
+        if ($ent->preferGroupAvatara|| !($ent->icontime)) {
             return avatara_url($ent, $params['size']);
         }
     } else {

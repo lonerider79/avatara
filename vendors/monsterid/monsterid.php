@@ -14,7 +14,7 @@ const MONSTER_BODY = '15';
 const MONSTER_EYES = '15'; 
 const MONSTER_MOUTH = '10';
 
-public function monsterid_check($entity){
+public static function monsterid_check($entity){
 
     //make sure the image functions are available before trying to make avatars
     if (function_exists(imagecreatetruecolor)) {

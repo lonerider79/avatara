@@ -5,6 +5,8 @@
  */
 $english = array(
     'avatara:title' => 'Avatara (Avatar Automatic)',
+    'avatara:admin:useforgroups' => 'Enable Avatara for groups as well',
+    'avatara:admin:useforgroups:description' => 'Generate Avatar for groups if they dont have one',
     'avatara:explanation' => 'Generate Avatar for profiles instead of using photo',
     'avatara:identicon_yes' => 'Your account will now use the Identicon image.',
     'avatara:identicon_no' => 'Your account will no longer use the Identicon image.',

@@ -25,7 +25,7 @@ if (!in_array($size, array('large', 'medium', 'small', 'tiny', 'master'))) {
     $size = "medium";
 }
 
-$seed = identicon_seed($group);
+$seed = avatara_seed($group);
 
 $filehandler = new ElggFile();
 $filehandler->owner_guid = $group->owner_guid;

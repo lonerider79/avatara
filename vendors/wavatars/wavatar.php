@@ -162,7 +162,7 @@ protected function wavatar_build ($seed, $file)
 
 }
 
-function wavatar_build_group ($seedbase, $file)
+protected function wavatar_build_group ($seedbase, $file)
 {
 
 	// build a four-up
@@ -246,7 +246,7 @@ function wavatar_build_group ($seedbase, $file)
  displays it.
  -----------------------------------------------------------------------------*/
 
-function wavatar_check ($entity)
+public static function wavatar_check ($entity)
 {
 
 	global $CONFIG;

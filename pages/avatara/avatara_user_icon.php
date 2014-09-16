@@ -21,7 +21,7 @@ if (!$user || !($user instanceof ElggUser)) {
     forward($url);
 }
 
-$seed = identicon_seed($user);
+$seed = avatara_seed($user);
 
 // Try and get the icon
 $filehandler = new ElggFile();
