@@ -98,16 +98,32 @@ function avatara_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
 }
 
 
-function avatara_url($ent, $size) {
-
+function avatara_url($ent, $size, $avatar = '') {
+    $status = false;
+    
     if ($ent instanceof ElggUser) {
-        if (identicon_check($ent)) {
-            return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
+        if($avatar == ''){ //non preview mode
+            $user = elgg_get_logged_in_user_entity();
+            $result = trim($user->preferAvatara);
+            if($result == '') return FALSE;
         }
+        if ($avatar == 'Identicon') {
+           $status = Identicon::avatar_check($ent); 
+        };
+        if ($avatar == 'MonsterId') {
+           $status = MonsterId::avatar_check($ent); 
+        };
+
+        if ($avatar == 'Wavatar') {
+           $status = Wavatar::avatar_check($ent); 
+        };
+        
+        if($status) return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
     } else if ($ent instanceof ElggGroup) {
         if (identicon_check($ent)) {
-            return elgg_get_site_url() . 'avatara/avatara_group_icon/' . $ent->getGUID() . '/' . $size;
+            
         }
+        if(status) return elgg_get_site_url() . 'avatara/avatara_group_icon/' . $ent->getGUID() . '/' . $size;
     }
 
     return false;

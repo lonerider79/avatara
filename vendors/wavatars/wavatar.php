@@ -246,7 +246,7 @@ protected function wavatar_build_group ($seedbase, $file)
  displays it.
  -----------------------------------------------------------------------------*/
 
-public static function wavatar_check ($entity)
+public static function avatar_check ($entity)
 {
 
 	global $CONFIG;

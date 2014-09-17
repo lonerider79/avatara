@@ -7,7 +7,7 @@ $group_guid = get_input('group_guid');
     $avatara_usewavatar = elgg_get_plugin_setting('avatara_usewavatar', 'avatara');
     $avatara_useforgroups = elgg_get_plugin_setting('avatara_useforgroups', 'avatara');
 
-if($group_guid) {
+if($group_guid && $avatara_useforgroups == "yes") {
     $group = get_entity($group_guid);
 
     $pref = get_input('preferGroupAvatara', false);

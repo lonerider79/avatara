@@ -10,7 +10,7 @@ if(!empty($vars["entity"])) {
     $img = '<img src="' . $wav . '" alt="AvatarA" />';
 
     $check = elgg_view('input/checkboxes', array('name' => 'preferGroupAvatara','align' => 'horizontal',
-                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar','Elgg Default'),
+                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar'),
                                                  'value' => $user->preferGroupAvatara));
 
     $submit = elgg_view('input/submit', array('value' => elgg_echo('save')));

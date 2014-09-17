@@ -22,7 +22,7 @@ class Identicon {
  * This makes sure that the image is present (builds it if it isn't) and then
  * displays it.
  */
-public static function identicon_check($entity) {
+public static function avatar_check($entity) {
 
     //make sure the image functions are available before trying to make avatars
     if (function_exists(imagecreatetruecolor)) {
