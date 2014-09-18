@@ -18,7 +18,7 @@ if ($pref) {
   unset($user->icontime);
   system_message(elgg_echo('identicon:identicon_yes'));
 } else {
-  $user->preferAvatara = 'Elgg Default';
+  $user->preferAvatara = '';
 
   $filehandler = new ElggFile();
   $filehandler->owner_guid = $user->guid;

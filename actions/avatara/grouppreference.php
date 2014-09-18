@@ -16,11 +16,11 @@ if($group_guid && $avatara_useforgroups == "yes") {
     }
 
     if ($pref) {
-        $group->preferGroupAvatara = true;
+        $group->preferGroupAvatara = $pref;
         unset($group->icontime);
         system_message(elgg_echo('identicon:group_identicon_yes'));
     } else {
-        $group->preferGroupAvatara = false;
+        $group->preferGroupAvatara = '';
         $group->icontime = time();
         system_message(elgg_echo('identicon:group_identicon_no'));
     }
