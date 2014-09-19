@@ -6,7 +6,7 @@ $user = get_entity($user_guid);
     $avatara_useIdenticon = elgg_get_plugin_setting('avatara_useIdenticon', 'avatara');
     $avatara_usemonsterId = elgg_get_plugin_setting('avatara_usemonsterId', 'avatara');
     $avatara_usewavatar = elgg_get_plugin_setting('avatara_usewavatar', 'avatara');
-    $avatara_useforgroups = elgg_get_plugin_setting('avatara_useforgroups', 'avatara');
+
 
 $pref = get_input('preferAvatara', false);
 if (is_array($pref)){
