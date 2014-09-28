@@ -387,7 +387,7 @@ public static function preview($entity) {
 
 }
 /** Builds the avatar. */
-protected function identicon_build($seed, $file) {
+protected function identicon_build($seed, $file = NULL) {
 
     /** parse hash string */
     $csh = hexdec(substr($seed, 0, 1)); // corner sprite shape
@@ -466,17 +466,22 @@ protected function identicon_build($seed, $file) {
     imagecolortransparent($resized, $bg);
 
     /** and finally, save */
-    $filename = $file->getFilenameOnFilestore();
-    $file->open('write');
-    imagejpeg($resized, $filename);
-    $file->close();
-    imagedestroy($resized);
-    avatara_build($filename,$seed);
+    if(!is_null($file)) {
+        $filename = $file->getFilenameOnFilestore();
+        $file->open('write');
+        imagejpeg($resized, $filename);
+        $file->close();
+        imagedestroy($resized);
+        avatara_build($filename,$seed);
+    } else {
+        imagejpeg($resized);
+    
+    }
     return true;
 }
 
 
-protected function identicon_build_group($seedbase, $file) {
+protected function identicon_build_group($seedbase, $file = NULL) {
 
     $size = 200;
 
@@ -566,13 +571,16 @@ protected function identicon_build_group($seedbase, $file) {
     }
 
     /** and finally, save */
+    if(!is_null($file)){
     $filename = $file->getFilenameOnFilestore();
     $file->open('write');
     imagejpeg($grid, $filename);
     $file->close();
     imagedestroy($grid);
     avatara_build($filename,$seedbase);
-
+    }else {
+        imagejpeg($grid);
+    }
     return true;
 }
 
