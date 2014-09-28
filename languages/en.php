@@ -18,7 +18,19 @@ $english = array(
     'avatara:admin:usemonsterid' => 'Use MonsterId',
     'avatara:admin:usemonsterid:description' => 'MonsterId generates little monster toons if no profile photo is available',
     'avatara:admin:usewavatar' => 'Use Wavatar',
-    'avatara:admin:usewavatar:description' => 'Wavatar is a polished avatar of cute litle toons'
+    'avatara:admin:usewavatar:description' => 'Wavatar is a polished avatar of cute litle toons',
+    'avatara:identicon_yes' => 'Your account will now use the Identicon image.',
+    'avatara:identicon_no' => 'Your account will no longer use the Identicon image.',
+    'avatara:group_identicon_yes' => 'The Identicon image will now be used as group photo.',
+    'avatara:group_identicon_no' => 'The Identicon image will no longer be used as group photo.',
+    'avatara:monsterid_yes' => 'Your account will now use the MonsterID image.',
+    'avatara:monsterid_no' => 'Your account will no longer use the MonsterID image.',
+    'avatara:group_monsterid_yes' => 'The MonsterID image will now be used as group photo.',
+    'avatara:group_monsterid_no' => 'The MonsterID image will no longer be used as group photo.',    
+    'avatara:wavatar_yes' => 'Your account will now use the Wavatar image.',
+    'avatara:wavatar_no' => 'Your account will no longer use the Wavatar image.',
+    'avatara:group_wavatar_yes' => 'The Wavatar image will now be used as group photo.',
+    'avatara:group_wavatar_no' => 'The Wavatar image will no longer be used as group photo.',    
     
 );
 add_translation("en", $english);

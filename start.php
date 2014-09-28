@@ -18,7 +18,7 @@ function avatara_init() {
     elgg_register_action('avatara/userpreference', $action_path . 'userpreference.php', 'logged_in');
     elgg_register_action('avatara/grouppreference', $action_path . 'grouppreference.php', 'logged_in');
     
-//    elgg_register_library('avatara', dirname(__FILE__) . '/lib/identicon.php');
+    elgg_register_library('avatara', dirname(__FILE__) . '/lib/avatara.php');
 //    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
 
     elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'avatara_usericon_hook', 900);
@@ -75,7 +75,7 @@ function avatara_usericon_hook($hook, $entity_type, $returnvalue, $params) {
     if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggUser)) {
         $ent = $params['entity'];
         // if we don't have an icon or the user just prefers the avatar
-        if ($ent->preferAvatara || !($ent->icontime)) {
+        if ($ent->preferAvatara != '' || !($ent->icontime)) {
             return avatara_url($ent, $params['size']);
         }
     } else {
@@ -89,7 +89,7 @@ function avatara_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
     if (($hook == 'entity:icon:url') && ($params['entity'] instanceof ElggGroup)) {
         $ent = $params['entity'];
         // if we don't have an icon or the user just prefers the avatar
-        if ($ent->preferGroupAvatara|| !($ent->icontime)) {
+        if ($ent->preferGroupAvatara != '' || !($ent->icontime)) {
             return avatara_url($ent, $params['size']);
         }
     } else {
@@ -104,20 +104,23 @@ function avatara_url($ent, $size, $avatar = '') {
     if ($ent instanceof ElggUser) {
         if($avatar == ''){ //non preview mode
             $user = elgg_get_logged_in_user_entity();
-            $result = trim($user->preferAvatara);
-            if($result == '') return FALSE;
+            if(!is_null($user)) return FALSE;
         }
-        if ($avatar == 'Identicon') {
+        $avatarsel = trim($user->preferAvatara);
+        switch($avatarsel) {
+        case 'Identicon': 
            $status = Identicon::avatar_check($ent); 
-        };
-        if ($avatar == 'MonsterId') {
+           break;
+        case 'MonsterId':
            $status = MonsterId::avatar_check($ent); 
-        };
-
-        if ($avatar == 'Wavatar') {
+           break;
+        case 'Wavatar':
            $status = Wavatar::avatar_check($ent); 
+           break;
+        case 'Elgg Default': //avatara option removed
+        default:
+            return FALSE;
         };
-        
         if($status) return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
     } else if ($ent instanceof ElggGroup) {
         if (identicon_check($ent)) {

@@ -29,6 +29,7 @@ function avatara_seed($entity) {
     return $seed;
 }
 /* Builds the all sizes avatar icons for the newly created avatar
+ * Used by individual avatar image functions
  * 
  */
 function avatara_build($filename,$seed){

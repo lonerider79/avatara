@@ -14,8 +14,8 @@ if (!$user || !$user->canEdit()) {
     forward(REFERER);
 }
 
-if ($user->preferAvatara != 'Elgg Default') {
-    $user->preferAvatara = 'Elgg Default';
+if ($user->preferAvatara != '' ) {
+    $user->preferAvatara = '';
     // Delete all identicons from diskspace
     $icon_sizes = elgg_get_config('icon_sizes');
     $seed = avatara_seed($user);

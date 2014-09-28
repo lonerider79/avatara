@@ -6,7 +6,7 @@ $avatara_usemonsterId = (trim(elgg_get_plugin_setting('avatara_usemonsterId', 'a
 $avatara_usewavatar = (trim(elgg_get_plugin_setting('avatara_usewavatar', 'avatara')) == '') ? "no" : elgg_get_plugin_setting('avatara_usewavatar', 'avatara');
 
 if ($user) {
-    if(trim($user->preferAvatara) == "") $preferA = "Identicon";
+    if(trim($user->preferAvatara) == "") $preferA = "Elgg Default";
     else $preferA = $user->preferAvatara;
     // call the hook directly to avoid overrides and other logic
     $img = "<table border =0 cellpadding=0 cellspacing=0><tr>";
@@ -17,7 +17,7 @@ if ($user) {
     $img .= '</tr></table>';
     $check = elgg_view('input/radio', array('name' => 'preferAvatara',
                                                 'align' => 'horizontal',
-                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar'),
+                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar','Elgg Default'),
                                                  'value' => $preferA));
 
     $submit = elgg_view('input/submit', array('value' => elgg_echo('save')));

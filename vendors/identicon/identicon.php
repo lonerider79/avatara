@@ -382,7 +382,10 @@ private function identicon_getcenter($shape,$fR,$fG,$fB,$bR,$bG,$bB,$usebg, $spr
     return $sprite;
 }
 
+/**Preview Avatar **/
+public static function preview($entity) {
 
+}
 /** Builds the avatar. */
 protected function identicon_build($seed, $file) {
 

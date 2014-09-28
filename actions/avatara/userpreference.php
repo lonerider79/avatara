@@ -13,10 +13,10 @@ if (is_array($pref)){
         $pref = $pref[0];
 }
 
-if ($pref) {
+if ($pref && $pref != 'Elgg Default') {
   $user->preferAvatara = $pref;
   unset($user->icontime);
-  system_message(elgg_echo('identicon:identicon_yes'));
+  system_message(elgg_echo('avatara:identicon_yes'));
 } else {
   $user->preferAvatara = '';
 
