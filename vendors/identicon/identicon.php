@@ -36,7 +36,7 @@ public static function avatar_check($entity) {
             $file->setMimeType('image/jpeg');
 
             if (!$file->exists()) {
-                if (identicon_build_group($seed, $file)) {
+                if ($this->identicon_build_group($seed, $file)) {
                     return true;
                 } else {
                     // there was some error building the icon
@@ -55,7 +55,7 @@ public static function avatar_check($entity) {
             $file->setMimeType('image/jpeg');
 
             if (!$file->exists()) {
-                if (identicon_build($seed, $file)) {
+                if ($this->identicon_build($seed, $file)) {
                     return true;
                 } else {
                     // there was some error building the icon
@@ -385,6 +385,37 @@ private function identicon_getcenter($shape,$fR,$fG,$fB,$bR,$bG,$bB,$usebg, $spr
 /**Preview Avatar **/
 public static function preview($entity) {
 
+    //make sure the image functions are available before trying to make avatars
+    if (function_exists(imagecreatetruecolor)) {
+        // entity is group, user or something else?
+        if ($entity instanceof ElggGroup) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->identicon_build_group($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+
+        } else if ($entity instanceof ElggUser) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->identicon_build($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+        } else {
+            // neither group nor user
+            return false;
+        }
+    }
+
+    
 }
 /** Builds the avatar. */
 protected function identicon_build($seed, $file = NULL) {
@@ -473,11 +504,15 @@ protected function identicon_build($seed, $file = NULL) {
         $file->close();
         imagedestroy($resized);
         avatara_build($filename,$seed);
+        return true;
     } else {
+        ob_start();
         imagejpeg($resized);
-    
+        $image = ob_get_contents();
+        ob_end_clean();
+        return $image;
     }
-    return true;
+    return false;
 }
 
 

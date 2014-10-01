@@ -28,7 +28,7 @@ public static function avatar_check($entity){
             $file->setMimeType('image/jpeg');
 
             if (!$file->exists()) {
-                if (monsterid_build_group($seed, $file)) {
+                if ($this->monsterid_build_group($seed, $file)) {
                     return true;
                 } else {
                     // there was some error building the icon
@@ -47,7 +47,7 @@ public static function avatar_check($entity){
             $file->setMimeType('image/jpeg');
 
             if (!$file->exists()) {
-                if (monsterid_build($seed, $file)) {
+                if ($this->monsterid_build($seed, $file)) {
                     return true;
                 } else {
                     // there was some error building the icon
@@ -64,8 +64,46 @@ public static function avatar_check($entity){
     
 }  
 }
+
+/**Preview Avatar **/
+public static function preview($entity) {
+
+    //make sure the image functions are available before trying to make avatars
+    if (function_exists(imagecreatetruecolor)) {
+        // entity is group, user or something else?
+        if ($entity instanceof ElggGroup) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->monsterid_build_group($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+
+        } else if ($entity instanceof ElggUser) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->monsterid_build($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+        } else {
+            // neither group nor user
+            return false;
+        }
+    }
+
+    
+}
+
+
    //Create monster image 
-function monsterid_build($seed='',$file=''){
+function monsterid_build($seed='',$file=NULL){
     // init random seed
     /**if($seed) srand( hexdec(substr(md5($seed),0,6)) );**/
 
@@ -118,17 +156,29 @@ $parts = array(
     // resize if needed, then output
     $out = @imagecreatetruecolor($size,$size)
         or die("GD image create failed");
-    $filename = $file->getFilenameOnFilestore();
+    
     imagecopyresampled($out,$monster,0,0,0,0,$size,$size,120,120);
-    $file->open('write');
-    imagejpeg($out,$filename);
-    $file->close();
-    imagedestroy($out);
-    imagedestroy($monster);
-    avatara_build($filename,$seed);
-    return true;
+    if(!is_null($file)) {
+        $filename = $file->getFilenameOnFilestore();
+        $file->open('write');
+        imagejpeg($out,$filename);
+        $file->close();
+        imagedestroy($out);
+        imagedestroy($monster);
+        avatara_build($filename,$seed);
+        return true;
+    }else{
+        ob_start();
+        imagejpeg($out);
+        $image = ob_get_contents();
+        ob_end_clean();
+        imagedestroy($out);
+        imagedestroy($monster);
+        return $image;
+    }
+    return false;
 }
-function monsterid_build_group($seed='',$file=''){
+function monsterid_build_group($seed='',$file=NULL){
     // init random seed
     /**if($seed) srand( hexdec(substr(md5($seed),0,6)) );**/
 
@@ -170,14 +220,25 @@ $parts = array(
     // resize if needed, then output
     $out = @imagecreatetruecolor($size,$size)
         or die("GD image create failed");
-    $filename = $file->getFilenameOnFilestore();
+    
     imagecopyresampled($out,$monster,0,0,0,0,$size,$size,120,120);
-    $file->open('write');
-    imagejpeg($out,$filename);
-    $file->close();
-    imagedestroy($out);
-    imagedestroy($monster);
-    avatara_build($filename,$seed);
-    return true;
+    if(!is_null($file)) {
+        $filename = $file->getFilenameOnFilestore();
+        $file->open('write');
+        imagejpeg($out,$filename);
+        $file->close();
+        imagedestroy($out);
+        imagedestroy($monster);
+        avatara_build($filename,$seed);
+        return true;
+    }else{
+        ob_start();
+        imagejpeg($out);
+        $image = ob_get_contents();
+        ob_end_clean();
+        imagedestroy($out);
+        imagedestroy($monster);
+        return $image;        
+    }
 }
 }

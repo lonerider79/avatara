@@ -103,11 +103,47 @@ private function wavatar_apply_image ($base, $part)
 
 }
 
+/**Preview Avatar **/
+public static function preview($entity) {
+
+    //make sure the image functions are available before trying to make avatars
+    if (function_exists(imagecreatetruecolor)) {
+        // entity is group, user or something else?
+        if ($entity instanceof ElggGroup) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->wavatar_build_group($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+
+        } else if ($entity instanceof ElggUser) {
+
+            $seed = avatara_seed($entity);
+
+                if ($this->wavatar_build($seed)) {
+                    return true;
+                } else {
+                    // there was some error building the icon
+                    return false;
+                }
+        } else {
+            // neither group nor user
+            return false;
+        }
+    }
+
+    
+}
+
 /*-----------------------------------------------------------------------------
  Builds the avatar.
  -----------------------------------------------------------------------------*/
 
-protected function wavatar_build ($seed, $file)
+protected function wavatar_build ($seed, $file=NULL)
 {
 
 	$face =         1 + (hexdec (substr ($seed,  1, 2)) % (self::WAVATAR_FACES));
@@ -149,20 +185,26 @@ protected function wavatar_build ($seed, $file)
 //         imagepng($avatar, $filename);
 //         imagedestroy($avatar);
 //     }
-    
-	$filename = $file->getFilenameOnFilestore();
-	//print $filename;
-	//print_r($file->getFilestore()->make_file_matrix($file->getOwnerEntity()->username));
-	//print_r($file->getOwnerEntity()->username);
-	imagejpeg($avatar, $filename);
-	imagedestroy($avatar);
-
-        avatara_build($filename,$seed);            
-	return true;
-
+        if(!is_null($file)) {
+            $filename = $file->getFilenameOnFilestore();
+            $file->open('write');
+            imagejpeg($avatar, $filename);
+            $file->close();
+            imagedestroy($avatar);
+            avatara_build($filename,$seed);            
+            return true;
+        }else{
+            ob_start();
+            imagejpeg($avatar);
+            $image = ob_get_contents();
+            ob_end_clean();
+            return $image;
+            
+        }
+        return false;
 }
 
-protected function wavatar_build_group ($seedbase, $file)
+protected function wavatar_build_group ($seedbase, $file = NULL)
 {
 
 	// build a four-up
@@ -226,17 +268,22 @@ protected function wavatar_build_group ($seedbase, $file)
 //         imagepng($avatar, $filename);
 //         imagedestroy($avatar);
 //     }
-    
-	$filename = $file->getFilenameOnFilestore();
-	//print $filename;
-	//print_r($file->getFilestore()->make_file_matrix($file->getOwnerEntity()->username));
-	//print_r($file->getOwnerEntity()->username);
-	imagejpeg($grid, $filename);
-	imagedestroy($grid);
-
-        avatara_build($filename,$seed);            
-	return true;
-
+        if(!is_null($file)) {
+            $filename = $file->getFilenameOnFilestore();
+            $file->open('write');
+            imagejpeg($grid, $filename);
+            $file->close();
+            imagedestroy($grid);
+            avatara_build($filename,$seed);            
+            return true;
+        }else{
+            ob_start();
+            imagejpeg($grid);
+            $image = ob_get_contents();
+            ob_end_clean();
+            return $image;            
+        }
+        return false;
 }
 
 
@@ -266,7 +313,7 @@ public static function avatar_check ($entity)
 			// if the wavatar doesn't exist, then build it
 			if ($entity instanceof ElggGroup) {
 				// groups get a special four-up icon
-				if (wavatar_build_group($seed, $file)) {
+				if ($this->wavatar_build_group($seed, $file)) {
 					$entity->icontime = time();
 					return true;
 				} else {
@@ -274,7 +321,7 @@ public static function avatar_check ($entity)
 					return false;
 				}
 			} else {
-				if (wavatar_build($seed, $file)) {
+				if ($this->wavatar_build($seed, $file)) {
 					$entity->icontime = time();
 					return true;
 				} else {
