@@ -54,6 +54,12 @@ function avatara_page_handler($page) {
                         set_input('size', elgg_extract(2, $page, 'medium'));
                         require "$base/avatara_group_icon.php";
                         break;
+                case "preview":
+                        set_input('entity',$page[1]); //user or group
+                        set_input('avatar',$page[3]); //Identicon,MonsterId,Wavatar
+                        set_input('entity_guid',$page[2]); //userid or group id
+                        require "$base/avatara_preview.php";
+                        break;
                 default:
                         return false;
         }
@@ -98,38 +104,6 @@ function avatara_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
 }
 
 
-function avatara_url($ent, $size, $avatar = '') {
-    $status = false;
-    
-    if ($ent instanceof ElggUser) {
-        if($avatar == ''){ //non preview mode
-            $user = elgg_get_logged_in_user_entity();
-            if(!is_null($user)) return FALSE;
-        }
-        $avatarsel = trim($user->preferAvatara);
-        switch($avatarsel) {
-        case 'Identicon': 
-           $status = Identicon::avatar_check($ent); 
-           break;
-        case 'MonsterId':
-           $status = MonsterId::avatar_check($ent); 
-           break;
-        case 'Wavatar':
-           $status = Wavatar::avatar_check($ent); 
-           break;
-        case 'Elgg Default': //avatara option removed
-        default:
-            return FALSE;
-        };
-        if($status) return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
-    } else if ($ent instanceof ElggGroup) {
-        if (identicon_check($ent)) {
-            
-        }
-        if(status) return elgg_get_site_url() . 'avatara/avatara_group_icon/' . $ent->getGUID() . '/' . $size;
-    }
 
-    return false;
-}
 ?>
 

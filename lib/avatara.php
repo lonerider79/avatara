@@ -65,5 +65,103 @@ function avatara_build($filename,$seed){
 
 
 }
+/*
+ * Returns the url for the avatar for the user.
+ * If the third parameter is specified preview of the avatar is made and the avatar image is not saved
+ * 
+ * @param object $ent   Passes the user/group entity for which the avatar is to be generated
+ * @param int   $size   The size for the avatar to be generated(default medium 200
+ * @param string    $avatar This could  be null if the avatar images are to be generated otherwise specify the avatar(Identicon,Wavatar,MonsterId)
+ * 
+ * @return string The URL to the plugin view which will display the avatar
+ *   
+ */
+function avatara_url($ent, $size, $avatar = NULL) {
+    $status = false;
+    
+    if ($ent instanceof ElggUser) {
+        if(is_null($avatar)) { //non preview mode
+        $avatarsel = trim($ent->preferAvatara);
+        switch($avatarsel) {
+        case 'Identicon': 
+           $status = Identicon::avatar_check($ent); 
+           break;
+        case 'MonsterId':
+           $status = MonsterId::avatar_check($ent); 
+           break;
+        case 'Wavatar':
+           $status = Wavatar::avatar_check($ent); 
+           break;
+        case 'Elgg Default': //avatara option removed
+        default:
+            return FALSE;
+        };
+        
+        if($status) return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
+        
+        } else { //preview
+            switch($avatarsel) {
+            case 'Identicon': 
+               //$status = Identicon::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/user/' . $ent->getGUID() . '/Identicon'; 
+               break;
+            case 'MonsterId':
+               //$status = MonsterId::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/user/' . $ent->getGUID() . '/MonsterId';
+               break;
+            case 'Wavatar':
+               //$status = Wavatar::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/user/' . $ent->getGUID() . '/Wavatar';
+               break;
+            case 'Elgg Default': //avatara option removed
+            default:
+                return FALSE;
+            };
+            
+        };
+    } else if ($ent instanceof ElggGroup) {
+        if(is_null($avatar)) { //non preview mode
+        $avatarsel = trim($ent->preferGroupAvatara);
+        switch($avatarsel) {
+        case 'Identicon': 
+           $status = Identicon::avatar_check($ent); 
+           break;
+        case 'MonsterId':
+           $status = MonsterId::avatar_check($ent); 
+           break;
+        case 'Wavatar':
+           $status = Wavatar::avatar_check($ent); 
+           break;
+        case 'Elgg Default': //avatara option removed
+        default:
+            return FALSE;
+        };
+        
+        if(status) return elgg_get_site_url() . 'avatara/avatara_group_icon/' . $ent->getGUID() . '/' . $size;
+        
+        } else { //preview
+            switch($avatarsel) {
+            case 'Identicon': 
+               //$status = Identicon::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/group/' . $ent->getGUID() . '/Identicon'; 
+               break;
+            case 'MonsterId':
+               //$status = MonsterId::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/group/' . $ent->getGUID() . '/MonsterId';
+               break;
+            case 'Wavatar':
+               //$status = Wavatar::preview($ent); 
+               return elgg_get_site_url() .'avatara/preview/group/' . $ent->getGUID() . '/Wavatar';
+               break;
+            case 'Elgg Default': //avatara option removed
+            default:
+                return FALSE;
+            };
+            
+        };
 
+        
+    }
 
+    return false;
+}

@@ -3,14 +3,23 @@
 if(!empty($vars["entity"])) {
     $group = $vars['entity'];
     $group_guid = $group->guid;
+    $avatara_useIdenticon = (trim(elgg_get_plugin_setting('avatara_useIdenticon', 'avatara')) =='') ? "no" : elgg_get_plugin_setting('avatara_useIdenticon', 'avatara');
+    $avatara_usemonsterId = (trim(elgg_get_plugin_setting('avatara_usemonsterId', 'avatara')) == '') ? "no" : elgg_get_plugin_setting('avatara_usemonsterId', 'avatara');
+    $avatara_usewavatar = (trim(elgg_get_plugin_setting('avatara_usewavatar', 'avatara')) == '') ? "no" : elgg_get_plugin_setting('avatara_usewavatar', 'avatara');
 
-    // call the hook directly to avoid overrides and other logic
-    $wav = avatara_url($group, 'large');
 
-    $img = '<img src="' . $wav . '" alt="AvatarA" />';
+   
+   
 
-    $check = elgg_view('input/checkboxes', array('name' => 'preferGroupAvatara','align' => 'horizontal',
-                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar'),
+    $img = "<table border=0 cellpadding=0 cellspacing=0><tr>";
+    if ($avatara_useIdenticon == "yes") $img .= '<td><img src="' . avatara_url($group, 'large','Identicon') . '" alt="AvatarA-Identicon" /></td>';
+    if ($avatara_usemonsterId == "yes") $img .= '<td><img src="' . avatara_url($group, 'large','MonsterId') . '" alt="AvatarA-MonsterId" /></td>';
+    if ($avatara_usewavatar == "yes") $img .= '<td><img src="' . avatara_url($group, 'large','Wavatar') . '" alt="AvatarA-Wavatar" /></td>';
+    
+    $img .= '</tr></table>';
+
+    $check = elgg_view('input/radio', array('name' => 'preferGroupAvatara','align' => 'horizontal',
+                                                 'options' => array('Identicon','MonsterId','Wavatar','Gravatar','Elgg Default'),
                                                  'value' => $user->preferGroupAvatara));
 
     $submit = elgg_view('input/submit', array('value' => elgg_echo('save')));
