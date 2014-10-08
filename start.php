@@ -138,7 +138,7 @@ function avatara_url($ent, $size, $avatar = NULL) {
         if($status) return elgg_get_site_url() .'avatara/avatara_user_icon/' . $ent->getGUID() . '/' . $size;
         
         } else { //preview
-            switch($avatarsel) {
+            switch($avatar) {
             case 'Identicon': 
                //$status = Identicon::preview($ent); 
                return elgg_get_site_url() .'avatara/preview/user/' . $ent->getGUID() . '/Identicon'; 
@@ -178,7 +178,7 @@ function avatara_url($ent, $size, $avatar = NULL) {
         if(status) return elgg_get_site_url() . 'avatara/avatara_group_icon/' . $ent->getGUID() . '/' . $size;
         
         } else { //preview
-            switch($avatarsel) {
+            switch($avatar) {
             case 'Identicon': 
                //$status = Identicon::preview($ent); 
                return elgg_get_site_url() .'avatara/preview/group/' . $ent->getGUID() . '/Identicon'; 
