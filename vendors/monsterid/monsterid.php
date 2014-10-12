@@ -1,6 +1,6 @@
 <?php
 
-//build_monster($_REQUEST['seed'],$_REQUEST['size']);
+
 
 class MonsterId {
     function __construct() {

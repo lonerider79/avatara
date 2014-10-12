@@ -13,18 +13,28 @@ elgg_register_event_handler('init','system','avatara_init');
 
 function avatara_init() {
     $action_path = elgg_get_plugins_path() . 'avatara/actions/avatara/';
+    elgg_register_library('identicon', dirname(__FILE__) . '/vendors/identicon/identicon.php');
+    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
+    elgg_register_library('wavatar', dirname(__FILE__) . '/vendors/wavatars/wavatar.php');
+
+    elgg_register_library('avatara', dirname(__FILE__) . '/lib/avatara.php');
+
+    elgg_extend_view('core/avatar/upload', 'avatara/editusericon');
         // Register a page handler so we can have nice URLs
     elgg_register_page_handler('avatara', 'avatara_page_handler');
     elgg_register_action('avatara/userpreference', $action_path . 'userpreference.php', 'logged_in');
     elgg_register_action('avatara/grouppreference', $action_path . 'grouppreference.php', 'logged_in');
     
     elgg_register_library('avatara', dirname(__FILE__) . '/lib/avatara.php');
-//    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
-
+    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
+    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
+    
     elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'avatara_usericon_hook', 900);
     $avatara_useforgroups = elgg_get_plugin_setting('avatara_useforgroups', 'avatara');
-    if($avatara_useforgroups == "yes") elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'avatara_groupicon_hook', 900);
-
+    if($avatara_useforgroups == "yes") {
+        elgg_register_plugin_hook_handler('entity:icon:url', 'group', 'avatara_groupicon_hook', 900);
+        elgg_extend_view('groups/edit', 'avatara/editgroupicon');
+    };
     
 }
 
@@ -116,7 +126,13 @@ function avatara_groupicon_hook($hook, $entity_type, $returnvalue, $params) {
  */
 function avatara_url($ent, $size, $avatar = NULL) {
     $status = false;
-    
+
+    elgg_register_library('identicon', dirname(__FILE__) . '/vendors/identicon/identicon.php');
+    elgg_register_library('monsterid', dirname(__FILE__) . '/vendors/monsterid/monsterid.php');
+    elgg_register_library('wavatar', dirname(__FILE__) . '/vendors/wavatars/wavatar.php');
+
+    elgg_register_library('avatara', dirname(__FILE__) . '/lib/avatara.php');
+
     if ($ent instanceof ElggUser) {
         if(is_null($avatar)) { //non preview mode
         $avatarsel = trim($ent->preferAvatara);
