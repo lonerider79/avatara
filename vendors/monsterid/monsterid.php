@@ -7,8 +7,8 @@ class MonsterId {
        
    }
 
-const MONSTER_LEGS ='5';
-const MONSTER_HAIR ='5';
+const MONSTER_LEGS = '5';
+const MONSTER_HAIR = '5';
 const MONSTER_ARMS = '5';
 const MONSTER_BODY = '15';
 const MONSTER_EYES = '15'; 
